@@ -1,11 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meetic Trends</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
 <?php
 
 $data = json_decode(file_get_contents('data.json'));
 
+$questions = $data->questions;
+
 $_GET['q'] = $_GET['q'] ? $_GET['q'] : 1;
 
-$question = $data[$_GET['q']];
-
+$question = $questions[$_GET['q']-1];
 
 if ( isset($_GET['score']) || ! isset($_SESSION['score']) ):
 	$_SESSION['score'] = 0;
@@ -23,64 +45,100 @@ if ( isset($_GET['score'])):
 endif;
 
 if ( $_GET['a'] ):
-	if ( $_GET['a'] == $question['answer']):
+	if ( $_GET['a'] == $question->answer):
 		?>
 		<div class="good">
-			<figure>
-				<img src="/assets/<?php print $_GET['q'] ?>/<?php print $question['answer'] ?>.jpg">
-			</figure>
 			<p>
-				Bonne Réponse !
+				Yes, you selected the correct Selfie !
 			</p>
+			<figure>
+				<img src="/assets/quiz<?php print $_GET['q'] ?>/<?php print $question->answer ?>.jpg">
+			</figure>
 		</div>
 		<?php
+		$nextText = "Another Selfie?";
 	else:
 		?>
 		<div class="bad">
 			<p>
-				Oops, la bonne réponse est : 
+				Ooops, the correct answer was :
 			</p>
 			<figure>
-				<img src="/assets/<?php print $_GET['q'] ?>/<?php print $question['answer'] ?>.jpg">
+				<img src="/assets/quiz<?php print $_GET['q'] ?>/<?php print $question->answer ?>.jpg">
 			</figure>
 		</div>
 		<?php
-		<?php
+		$nextText = "Better luck next Selfie?";
 	endif;
 	?>
 	<?php
-	if ($data[$_GET['q']+1]):
+	print_r($questions[$_GET['q']]);
+	if ($questions[$_GET['q']]):
 		?>
 		<p>
-			<a href="/?q=<?php print $_GET['q']+1 ?>">Question Suivante  <?php print $_GET['q']+1 ?> / <?php print count($data)-1 ?></a>
+			<a href="/?q=<?php print $_GET['q']+1 ?>"><?php print $nextText ?> On to question <?php print $_GET['q']+1 ?> / <?php print count($questions) ?></a>
 		</p>
 		<?php
 	else:
+		$resultText = "You can do better";
+		if ( $_SESSION['score'] > count($questions) / 3 )
+			$resultText = "Not Bad";
+		if ( $_SESSION['score'] > count($questions) / 3 * 2 )
+			$resultText = "Bery Good";
+		if ( $_SESSION['score'] == count($questions) )
+			$resultText = "Bery Good";
 		?>
 		<p>
-			<a href="/?score">Voir mon score</a>
+			That’s the end of the game ! You scored <?php print $_SESSION['score'] ?> out of <?php print count($questions) ?> <?php print $resultText ?>
+		</p>
+		<p>
+			<a href="/">Try again !</a>
+		</p>
+		<p>
+			See how will your friends score on Selfies which turned badly > Facebook
 		</p>
 		<?php
 	endif;
 	?>
 	<?php
 else:
-	if ( $question] ):
+	if ( $question ):
 		?>
-		<ul>
+		<h2><?php print $question->title ?></h2>
+		<ul class="answers">
 		<?php
-		for(i=0;i<4;i++):
+		$items = array('1', '2', '3', '4');
+		shuffle($items);
+		foreach($items as $item):
 			?>
 			<li>
-				<a href="/?q=<?php print $_GET['q'] ?>&a=<?php print $i ?>">
-					<img src="/assets/<?php print $_GET['q'] ?>/<?php print $i ?>.jpg" />
+				<a href="/?q=<?php print $_GET['q'] ?>&a=<?php print $item ?>">
+					<img src="/assets/quiz<?php print $_GET['q'] ?>/<?php print $item ?>.jpg" />
 				</a>
 			</li>
 			<?php
-		endfor;
+		endforeach;
 		?>
 		</ul>
 		<?php
 	endif;
 endif;
 
+?>
+<xmp>
+<?php
+/*
+print_r(array(
+	'_get'	=>	$_GET,
+	'question'	=>	$question,
+	'data' => $data
+));
+*/
+?>
+</xmp>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
