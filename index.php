@@ -10,6 +10,8 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
 
+	<link href='http://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -19,6 +21,11 @@
   </head>
   <body>
 
+<header>
+	<h1>Meetic Trends</h1>
+</header>
+
+<div id="wrapper">
 <?php
 
 $data = json_decode(file_get_contents('data.json'));
@@ -72,7 +79,7 @@ if ( $_GET['a'] ):
 	endif;
 	?>
 	<?php
-	print_r($questions[$_GET['q']]);
+
 	if ($questions[$_GET['q']]):
 		?>
 		<p>
@@ -125,6 +132,13 @@ else:
 endif;
 
 ?>
+
+</div>
+
+<footer>
+	
+</footer>
+
 <xmp>
 <?php
 /*

@@ -1,4 +1,38 @@
 
+body {
+	font-family: 'Lato', sans-serif;
+}
+
+header {
+	
+}
+
+h1 {
+	background: url(/img/logo.png) top center no-repeat;
+	text-indent: -100%;
+	overflow: hidden;
+	width: 500px;
+	height: 80px;
+	margin: 10px auto;
+}
+
+strong, a {
+	color: #FF0088;
+}
+
+#wrapper {
+	margin: 0 auto;
+	width: 90%;
+}
+
+
+.bad {
+	font-size: 20px;
+}
+.bad figure img {
+	width: 500px;
+	height: auto;
+}
 
 ul {
 	list-style: none;
@@ -17,6 +51,6 @@ ul {
 }
 .answers li img {
 	margin-top: -15%;
-	width: 100%;
-	hegiht: 100%;
+	width: 300px;
+	height: 200px;
 }
