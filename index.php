@@ -95,15 +95,16 @@ if ( isset($_GET['a']) ):
 		</div>
 		<?php
 	else:
+		
 		for($i=1;$i<=count($questions);$i++)
 			$s += $_SESSION['score'][$i];
 
 		$resultText = "You can do better";
-		if ( $_SESSION['score'] > count($questions) / 3 )
+		if ( $s > count($questions) / 3 )
 			$resultText = "Not Bad";
-		if ( $_SESSION['score'] > count($questions) / 3 * 2 )
+		if ( $s > count($questions) / 3 * 2 )
 			$resultText = "Very Good";
-		if ( $_SESSION['score'] == count($questions) )
+		if ( $s == count($questions) )
 			$resultText = "Bery Good";
 		?>
 		<div class="score">
@@ -116,7 +117,7 @@ if ( isset($_GET['a']) ):
 				<a href="/?new">Try again !</a>
 			</p>
 			<p>
-				See how will your friends score on Selfies which turned badly > Facebook
+Share your score on <a href="http://www.facebook.com" target="_blank"><img src='/assets/facebook_icon.png'></a> and see how your friends score on Selfies that really turned bad !				
 			</p>
 		</div>
 		<?php
@@ -126,7 +127,7 @@ if ( isset($_GET['a']) ):
 else:
 	if ( $question ):
 		?>
-		<h2><?php print $question->title ?></h2>
+		<h2><strong>Quizz</strong> - <?php print $question->title ?></h2>
 		<ul class="answers">
 		<?php
 		$items = array('1', '2', '3', '4');
@@ -156,9 +157,9 @@ endif;
 
 <xmp>
 <?php
-// print_r($_SESSION);
-/*
-print_r(array(
+//print_r($_SESSION);
+
+/*print_r(array(
 	'_get'	=>	$_GET,
 	'question'	=>	$question,
 	'data' => $data
