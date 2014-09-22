@@ -1,3 +1,7 @@
+<?php
+session_start();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -32,12 +36,12 @@ $data = json_decode(file_get_contents('data.json'));
 
 $questions = $data->questions;
 
-$_GET['q'] = $_GET['q'] ? $_GET['q'] : 1;
+$_GET['q'] = isset($_GET['q']) ? $_GET['q'] : 1;
 
 $question = $questions[$_GET['q']-1];
 
-if ( isset($_GET['score']) || ! isset($_SESSION['score']) ):
-	$_SESSION['score'] = 0;
+if ( ! isset($_SESSION['score']) || isset($_GET['new'])):
+	$_SESSION['score'] = array();
 endif;
 
 if ( isset($_GET['score'])):
@@ -51,8 +55,9 @@ if ( isset($_GET['score'])):
 	<?php
 endif;
 
-if ( $_GET['a'] ):
+if ( isset($_GET['a']) ):
 	if ( $_GET['a'] == $question->answer):
+		$_SESSION['score'][$_GET['q']] = 1;
 		?>
 		<div class="good">
 			<p>
@@ -82,28 +87,37 @@ if ( $_GET['a'] ):
 
 	if ($questions[$_GET['q']]):
 		?>
-		<p>
-			<a href="/?q=<?php print $_GET['q']+1 ?>"><?php print $nextText ?> On to question <?php print $_GET['q']+1 ?> / <?php print count($questions) ?></a>
-		</p>
+		<div class="navigation">
+			<p>
+				<a href="/?q=<?php print $_GET['q']+1 ?>"><?php print $nextText ?> On to question <?php print $_GET['q']+1 ?> / <?php print count($questions) ?></a>
+			</p>
+		</div>
 		<?php
 	else:
+		for($i=1;$i<=count($questions);$i++)
+			$s += $_SESSION['score'][$i];
+
 		$resultText = "You can do better";
 		if ( $_SESSION['score'] > count($questions) / 3 )
 			$resultText = "Not Bad";
 		if ( $_SESSION['score'] > count($questions) / 3 * 2 )
-			$resultText = "Bery Good";
+			$resultText = "Very Good";
 		if ( $_SESSION['score'] == count($questions) )
 			$resultText = "Bery Good";
 		?>
-		<p>
-			That’s the end of the game ! You scored <?php print $_SESSION['score'] ?> out of <?php print count($questions) ?> <?php print $resultText ?>
-		</p>
-		<p>
-			<a href="/">Try again !</a>
-		</p>
-		<p>
-			See how will your friends score on Selfies which turned badly > Facebook
-		</p>
+		<div class="score">
+			<p>
+				That’s the end of the game ! 
+				<br />
+				You scored <?php print $s ?> out of <?php print count($questions) ?>  : <strong>	<?php print $resultText ?>   </strong>
+			</p>
+			<p>
+				<a href="/?new">Try again !</a>
+			</p>
+			<p>
+				See how will your friends score on Selfies which turned badly > Facebook
+			</p>
+		</div>
 		<?php
 	endif;
 	?>
@@ -141,6 +155,7 @@ endif;
 
 <xmp>
 <?php
+// print_r($_SESSION);
 /*
 print_r(array(
 	'_get'	=>	$_GET,
